@@ -1,0 +1,11 @@
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.exe
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.deps.json
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.runtimeconfig.json
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.runtimeconfig.dev.json
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.dll
+C:\Users\joeym\source\repos\File_Comparison\bin\Debug\netcoreapp3.1\File_Comparison.pdb
+C:\Users\joeym\source\repos\File_Comparison\obj\Debug\netcoreapp3.1\File_Comparison.csprojAssemblyReference.cache
+C:\Users\joeym\source\repos\File_Comparison\obj\Debug\netcoreapp3.1\File_Comparison.AssemblyInfoInputs.cache
+C:\Users\joeym\source\repos\File_Comparison\obj\Debug\netcoreapp3.1\File_Comparison.AssemblyInfo.cs
+C:\Users\joeym\source\repos\File_Comparison\obj\Debug\netcoreapp3.1\File_Comparison.dll
+C:\Users\joeym\source\repos\File_Comparison\obj\Debug\netcoreapp3.1\File_Comparison.pdb
