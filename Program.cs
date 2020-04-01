@@ -1,67 +1,34 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace File_Comparison
 {
-    class Program
+    public class Program
     {
         public static string f1 = "";
         public static string f2 = "";
         public static bool same = true;
         static void Main(string[] args)
         {
+            Console.WriteLine("Commands are: diff <first file name> <second file name>\nPlace file in the executables folder.");
             UI(Console.ReadLine());
-            //string inpt = Console.ReadLine();
-            //string inpt2 = Console.ReadLine();
-            //readFile(inpt, inpt2);
         }
-        static void readFile(string inpt, string inpt2) // Reads the contents of the file in to be inspected by the dataCheck() function.
-        {
-            try
-            {
-                using(StreamReader a = new StreamReader(inpt)) // This could be its own function, and it could just be iterated. 
-                {
-                    string line;
-                    while((line = a.ReadLine()) != null) // Reads line by line
-                    {
-                        f1 = f1 + line; // Adds to a string.
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("The file could not be read."); // If the file isnt there, tell the user.
-            }
-            try
-            {
-                using (StreamReader a = new StreamReader(inpt2))
-                {
-                    string line;
-                    while ((line = a.ReadLine()) != null)
-                    {
-                        f2 = f2 + line;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read.");
-            }
-
-        }
+       
         static void UI(string conInput)
         {
             string[] command = conInput.Split(" ");
-            switch(command[0]){                                         // Switch statement is used to make it harder to break with bogus input, whilst also making it easier to read when adding new features.
+            switch (command[0]) {                                         // Switch statement is used to make it harder to break with bogus input, whilst also making it easier to read when adding new features.
                 case "diff":
                     if (command.Length != 3)
                     {
                         Console.WriteLine("Too many/few arguments.");
                         break;
                     }
-                    readFile(command[1], command[2]);
-                    dataCheck(); 
-                    if(same != true)
+                    readFile a = new readFile(command[1]);
+                    readFile b = new readFile(command[2]);
+                    dataCheck F = new dataCheck(a, b);
+                    if (F.same != true)
                     {
                         Console.WriteLine("They are different files.");
                     }
@@ -75,36 +42,78 @@ namespace File_Comparison
                     break;
             }
         }
-        static void dataCheck()
+        
+
+    }
+    public class readFile {
+        string fileData = ""; // Store as  string, convert to char array later.
+        public List<line> linesInFile = new List<line>(); // A list of lines is created, thus each one can be checked one by one. 
+        public char[] fileDataAnalysis = { }; // This is public as it will be checked later.
+        public readFile(string fileName)
         {
-            if(f1.Length != f2.Length) // Checks the size of the file by the data in the file. *File* size is irrelevant in this check. 
+            try
+            {
+                using (StreamReader a = new StreamReader(fileName))  
+                {
+                    string line_;
+                    while ((line_ = a.ReadLine()) != null) // Reads line by line
+                    {
+                        fileData = fileData + line_; // Adds to a string.
+                        line t = new line(); // Adds line to list, lists only have one attribute, which is a string so its not too hard.
+                        t.line_ = line_;
+                        linesInFile.Add(t);
+                    }
+                }
+                fileDataAnalysis = fileData.ToCharArray();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The file could not be read."); // If the file isn't there, tell the user.
+            }
+        }
+    }
+    public class line
+    {
+         public string line_ = "";  // Lines are used to anylize each part of the code line by line, faster than the original character by character comparison.
+    }
+    public class dataCheck
+    {
+        public bool same = true;
+        public dataCheck(readFile f1, readFile f2) // Same as the one above, but in this case uses a char array.
+        {
+            if (f1.fileDataAnalysis.Length != f2.fileDataAnalysis.Length) // Checks the size of the file by the data in the file. *File* size is irrelevant in this check. 
             {
                 same = false;
             }
             else
             {
-                Console.WriteLine("Theyre the same size.");
+                Console.WriteLine("They're the same size.");
             }
 
-            char[] f1_ = f1.ToCharArray();
-            char[] f2_ = f2.ToCharArray();
             int count = 0;
             try
             {
-                foreach (char m in f1)
+                foreach (line m in f1.linesInFile)
                 {
-                    if (m != f2[count])
+                    if (m.line_ != f2.linesInFile[count].line_)
                     {
-                        same = false;
+                        same = false; 
+                        Console.WriteLine($"{m.line_} is different as line {count}.\n'{m.line_}'\n'{f2.linesInFile[count].line_}'"); // Can be broken into lines to show individual lines, the the positions in those lines.
+                        
                     }
                     count++;
+                }
+                if (same == true)
+                {
+                    Console.WriteLine("Line by line, they're the same.");
                 }
             }
             catch
             {
-                // This is just to stop it complaining if a list is bigger than another.
+                return; // throws us out so we dont waste CPU cycles.
             }
         }
+
 
     }
 }
