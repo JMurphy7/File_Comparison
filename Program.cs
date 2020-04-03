@@ -30,7 +30,7 @@ namespace File_Comparison
                     dataCheck F = new dataCheck(a, b);
                     if (F.same != true)
                     {
-                        Console.WriteLine("They are different files.");
+                        Console.WriteLine("\nThey are different files.");
                     }
                     else
                     {
@@ -58,6 +58,7 @@ namespace File_Comparison
                     string line_;
                     while ((line_ = a.ReadLine()) != null) // Reads line by line
                     {
+                        
                         fileData = fileData + line_; // Adds to a string.
                         line t = new line(); // Adds line to list, lists only have one attribute, which is a string so its not too hard.
                         t.line_ = line_;
@@ -98,8 +99,21 @@ namespace File_Comparison
                     if (m.line_ != f2.linesInFile[count].line_)
                     {
                         same = false; 
-                        Console.WriteLine($"{m.line_} is different as line {count}.\n'{m.line_}'\n'{f2.linesInFile[count].line_}'"); // Can be broken into lines to show individual lines, the the positions in those lines.
-                        
+                        //Console.WriteLine($"{m.line_} is different as line {count}.\n'{m.line_}'\n'{f2.linesInFile[count].line_}'"); // Can be broken into lines to show individual lines, the the positions in those lines.
+                        int innerCount = 0;
+                        foreach(char i in m.line_)
+                        {
+                            if (m.line_[innerCount] != f2.linesInFile[count].line_[innerCount]) {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"{m.line_[innerCount]}"); // Check line by line, then do a more thorough char by char check (less instructions are executed this way)
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                            else
+                            {
+                                Console.Write($"{m.line_[innerCount]}");
+                            }
+                            innerCount++;
+                        }
                     }
                     count++;
                 }
