@@ -91,43 +91,54 @@ namespace File_Comparison
                 Console.WriteLine("They're the same size.");
             }
 
-            int count = 0;
+            readFile FileLargest = f1;
+            readFile FileSmallest = f2;
+            if (f1.fileDataAnalysis.Length <= f2.fileDataAnalysis.Length)
+            {
+                FileLargest = f2;
+                FileSmallest = f1;
+            }
+
+            int count = 0;  
+            while (count < FileLargest.linesInFile.Count) { // trying to get it to show every line, not just the first
+                 
             try
             {
-                foreach (line m in f1.linesInFile)
-                {
-                    if (m.line_ != f2.linesInFile[count].line_)
-                    {
-                        same = false; 
-                        //Console.WriteLine($"{m.line_} is different as line {count}.\n'{m.line_}'\n'{f2.linesInFile[count].line_}'"); // Can be broken into lines to show individual lines, the the positions in those lines.
-                        int innerCount = 0;
-                        foreach(char i in m.line_)
-                        {
-                            if (m.line_[innerCount] != f2.linesInFile[count].line_[innerCount]) {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write($"{m.line_[innerCount]}"); // Check line by line, then do a more thorough char by char check (less instructions are executed this way)
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                            else
-                            {
-                                Console.Write($"{m.line_[innerCount]}");
-                            }
-                            innerCount++;
-                        }
-                    }
-                    count++;
-                }
+                lineByLine(FileLargest, FileSmallest, count);
+            }
+            catch
+            {
+                    // Nothing. Very poor practice, but it causes no harm here.
+            } 
+            count++;
+            }
+
+
                 if (same == true)
                 {
                     Console.WriteLine("Line by line, they're the same.");
                 }
-            }
-            catch
-            {
-                return; // throws us out so we dont waste CPU cycles.
-            }
         }
 
+        public void lineByLine(readFile FileLargest, readFile FileSmallest, int count)
+        {
+                int innerCount = 0;
+                foreach (char i in FileLargest.linesInFile[count].line_)
+                {
+                    if (FileLargest.linesInFile[count].line_[innerCount] != FileSmallest.linesInFile[count].line_[innerCount])
+                    {
+                        same = false;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}"); // Check line by line, then do a more thorough char by char check (less instructions are executed this way)
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}");
+                    }
+                    innerCount++;
+                }
+        }
 
     }
 }
