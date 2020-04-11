@@ -6,19 +6,17 @@ namespace File_Comparison
 {
     public class Program
     {
-        public static string f1 = "";
-        public static string f2 = "";
         public static bool same = true;
         static void Main(string[] args)
         {
-            Console.WriteLine("Commands are: diff <first file name> <second file name>\nPlace file in the executables folder.");
-            UI(Console.ReadLine());
+            Console.WriteLine("Commands are: diff <first file name> <second file name>\nPlace file in the executables folder.\nTo quit, type 'exit'");
+            while (true) { UI(Console.ReadLine()); }
         }
        
         static void UI(string conInput)
         {
             string[] command = conInput.Split(" ");
-            switch (command[0]) {                                         // Switch statement is used to make it harder to break with bogus input, whilst also making it easier to read when adding new features.
+            switch (command[0]) { // Switch statement is used to make it harder to break with bogus input, whilst also making it easier to read when adding new features.
                 case "diff":
                     if (command.Length != 3)
                     {
@@ -36,6 +34,10 @@ namespace File_Comparison
                     {
                         Console.WriteLine("They're the same file.");
                     }
+                    break;
+                case "exit":
+                    Console.WriteLine("Ending program...");
+                    Environment.Exit(0);
                     break;
                 default:
                     Console.WriteLine("Invalid command.");
@@ -90,27 +92,22 @@ namespace File_Comparison
             {
                 Console.WriteLine("They're the same size.");
             }
-
+            int fileLargeSize = f1.linesInFile.Count;
+            int fileSmallSize = f2.linesInFile.Count;
             readFile FileLargest = f1;
             readFile FileSmallest = f2;
-            if (f1.fileDataAnalysis.Length <= f2.fileDataAnalysis.Length)
+            if (f1.linesInFile.Count <= f2.linesInFile.Count)
             {
+                fileLargeSize = f2.linesInFile.Count;
                 FileLargest = f2;
+                fileSmallSize = f1.linesInFile.Count;
                 FileSmallest = f1;
             }
 
             int count = 0;  
-            while (count < FileLargest.linesInFile.Count) { // trying to get it to show every line, not just the first
-                 
-            try
-            {
-                lineByLine(FileLargest, FileSmallest, count);
-            }
-            catch
-            {
-                    // Nothing. Very poor practice, but it causes no harm here.
-            } 
-            count++;
+            while (count < fileLargeSize) {
+                lineByLine(FileLargest, FileSmallest, count); // lineByLine checks a single line at the address 'count', so it is incredibly portable code, and thus we iterate it in a while loop.
+                count++;
             }
 
 
@@ -122,22 +119,45 @@ namespace File_Comparison
 
         public void lineByLine(readFile FileLargest, readFile FileSmallest, int count)
         {
-                int innerCount = 0;
-                foreach (char i in FileLargest.linesInFile[count].line_)
+            
+            if (count >= FileSmallest.linesInFile.Count)  // If count is larger than the total lines in the smallest file, then just print the larger file
+            {
+                    Console.WriteLine($"{FileLargest.linesInFile[count].line_}");
+            }
+            else
+            {   
+                line LineLongest = FileLargest.linesInFile[count];
+                line LineShortest = FileSmallest.linesInFile[count];
+                if (FileSmallest.linesInFile[count].line_.Length > FileLargest.linesInFile[count].line_.Length)
                 {
-                    if (FileLargest.linesInFile[count].line_[innerCount] != FileSmallest.linesInFile[count].line_[innerCount])
-                    {
-                        same = false;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}"); // Check line by line, then do a more thorough char by char check (less instructions are executed this way)
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    else
-                    {
-                        Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}");
-                    }
-                    innerCount++;
+                    LineLongest = FileSmallest.linesInFile[count];
+                    LineShortest = FileLargest.linesInFile[count]; 
                 }
+                int innerCount = 0;
+                foreach (char i in LineShortest.line_) // To stop it comparing against numbers larger than the shortest line (there is still a try-catch later to aid this)
+                {
+
+                    try
+                    {
+                        if (FileLargest.linesInFile[count].line_[innerCount] != FileSmallest.linesInFile[count].line_[innerCount]) 
+                        {
+                            same = false;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}"); // Check line by line, then do a more thorough char by char check (less instructions are executed this way)
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else
+                        {
+                            Console.Write($"{FileLargest.linesInFile[count].line_[innerCount]}");
+                        }
+                        innerCount++;
+                    }
+                    catch
+                    {
+                        // Runs if one line is longer than the other. 
+                    }
+                    }
+            }
         }
 
     }
